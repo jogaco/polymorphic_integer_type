@@ -1,4 +1,5 @@
 class Link < ActiveRecord::Base
+  EMPTY_COMMENT = 'no comment'
 
   include PolymorphicIntegerType::Extensions
 
