@@ -171,4 +171,14 @@ describe PolymorphicIntegerType do
     end
   end
 
+  context "when not using polymorphic integer type" do
+    let(:employee) { Employee.create(:name => "James") }
+
+    it "should have the proper id, type and object for the source" do
+      employee_1 = employee
+      employee_1.addresses << Address.new
+    end
+
+  end
+
 end

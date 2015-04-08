@@ -57,27 +57,30 @@ module PolymorphicIntegerType
           else
             options[:conditions].merge!({foreign_type => klass_mapping.to_i})
           end
+          true
+        else
+          nil
         end
       end
 
       def has_many(name, options = {}, &extension)
-        remove_type_and_establish_mapping(name, options)
-        prev_callback = options.delete(:before_add)
-        new_callbacks = ["add_set_type_#{name}".to_sym]
-        new_callbacks << prev_callback if prev_callback
-        options = options.merge(:before_add => new_callbacks)
-        super(name, options, &extension)
+        if remove_type_and_establish_mapping(name, options)
+          prev_callback = options.delete(:before_add)
+          new_callbacks = ["add_set_type_#{name}".to_sym]
+          new_callbacks << prev_callback if prev_callback
+          options = options.merge(:before_add => new_callbacks)
 
-        define_method "add_set_type_#{name}" do |record|
-          record.send("#{self.class.class_variable_get("@@foreign_type_#{name}")}=", self.class.class_variable_get("@@poly_type_#{name}"))
+          define_method "add_set_type_#{name}" do |record|
+            record.send("#{self.class.class_variable_get("@@foreign_type_#{name}")}=", self.class.class_variable_get("@@poly_type_#{name}"))
+          end
         end
+        super(name, options, &extension)
       end
 
       def has_one(name, options = {})
         remove_type_and_establish_mapping(name, options)
         super(name, options)
       end
-
 
     end
 

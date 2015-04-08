@@ -7,6 +7,8 @@ require 'support/dog'
 require 'support/person'
 require 'support/food'
 require 'support/drink'
+require 'support/employee'
+require 'support/address'
 
 
 
